@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist/",
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true,
+      "noImplicitAny": true,
+      "module": "ESNext",
+      "target": "ESNext",
+      "allowJs": false,
+      "strict": true,
+      "strictNullChecks": true,
+      "sourceMap": true,
+    }
+  }
