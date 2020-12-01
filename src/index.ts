@@ -27,7 +27,7 @@ const props: EngineProps = {
     "maxY": maxY,
     "minX": 0,
     "minY": 0,
-    "count": 20,
+    "count": 30,
 }
 
 new Engine(props, app)
