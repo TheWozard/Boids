@@ -14,7 +14,7 @@ const app = new PIXI.Application({
     resolution: 1       // default: 1
 });
 
-app.renderer.backgroundColor = 0x000000;
+app.renderer.backgroundColor = 0x121212;
 app.renderer.view.style.position = "absolute";
 app.renderer.view.style.display = "block";
 
@@ -27,7 +27,6 @@ const props: EngineProps = {
     "maxY": maxY,
     "minX": 0,
     "minY": 0,
-    "count": 30,
 }
 
 new Engine(props, app)

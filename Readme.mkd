@@ -1,2 +1,5 @@
 # Boids
 A simple flock simulation
+
+## Running Locally
+Run `npm i` then `npm run start`

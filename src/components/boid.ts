@@ -108,7 +108,6 @@ export class Boid extends PIXI.Container implements Updatable, Wrapable {
                     sumX += target.x - this.x
                     sumY += target.y - this.y
                 }
-                this.pointVector(this.boidMovementVector)
             }
             if (counted === 0) {
                 this.boidIntendedLocationVector = this.boidMovementVector
@@ -118,6 +117,7 @@ export class Boid extends PIXI.Container implements Updatable, Wrapable {
                 this.boidIntendedLocationVector = new Victor(targetX, targetY).normalize()
                 this.boidMovementVector = this.boidMovementVector.add(this.boidIntendedLocationVector.clone().multiplyScalar(this.settings.centeringFactor * delta)).normalize()
             }
+            this.pointVector(this.boidMovementVector)
         }
     }
 
