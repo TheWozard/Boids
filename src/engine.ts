@@ -15,7 +15,6 @@ export interface EngineProps {
 
 export class Engine {
 
-    private boundedObjects: Wrapable[] = [];
     private updateList: Updatable[] = [];
     private boids: Boid[] = [];
 
@@ -27,6 +26,7 @@ export class Engine {
         new SolidShader(0xB3E2EB),
         new SolidShader(0xDDE8E9),
     ]
+    private boidCount = 80
     private static defaultSettings: SimulationSettings = {
         "debug": false, // Should the Boids render their debug info
         "applyScale": false, // Unimplemented (Scale of boid increases the radiuses proportionally)
@@ -63,7 +63,7 @@ export class Engine {
         this.props = props
         this.settings = Object.assign({}, Engine.defaultSettings)
 
-        for (let index = 0; index < 80; index++) {
+        for (let index = 0; index < this.boidCount; index++) {
             var boid = new Boid({
                 "x": Math.random() * props.maxX,
                 "y": Math.random() * props.maxY,
@@ -73,9 +73,7 @@ export class Engine {
                 "settings": this.settings,
             });
             app.stage.addChild(boid)
-            this.boundedObjects.push(boid)
             this.boids.push(boid)
-            this.updateList.push(boid)
         }
 
         const width = 200
@@ -120,6 +118,33 @@ export class Engine {
             new Slider({
                 "title": "Centering Direction", "height": 10, "width": width, "min": -1, "max": 1, "padding": padding, "color": color,
             }, (value: number) => { this.settings.centeringDirection = value; this.reDraw(); }, this.settings.centeringDirection),
+            new Divider({
+                "height": divider, "width": width + 2 * padding, "color": color,
+            }),
+            new Slider({
+                "title": "Boids", "height": 10, "width": width, "min": 0, "max": 500, "padding": padding, "color": color,
+            }, (value: number) => { 
+                while (value > this.boids.length) {
+                    var boid = new Boid({
+                        "x": Math.random() * props.maxX,
+                        "y": Math.random() * props.maxY,
+                        "shader": this.boidColors[Math.floor(Math.random() * this.boidColors.length)],
+                        "speed": 5,
+                        "scale": 7,
+                        "settings": this.settings,
+                    });
+                    app.stage.addChild(boid)
+                    this.boids.push(boid)
+                }
+                while (value < this.boids.length) {
+                    const boid = this.boids.pop()
+                    if (boid == null) {
+                        break;
+                    }
+                    app.stage.removeChild(boid)
+                }
+            }, this.boidCount),
+            
         ], padding)
         menu.x = padding
         menu.y = padding
@@ -170,7 +195,8 @@ export class Engine {
     public forceUpdate(delta: number) {
         this.updateList.forEach((itm: Updatable) => itm.update(delta))
 
-        this.boundedObjects.forEach((obj) => {
+        this.boids.forEach((obj) => {
+            obj.update(delta)
             // TODO: This better
             if (obj.x < this.props.minX - obj.wrapPadding) {
                 obj.x = this.props.maxX + obj.wrapPadding
