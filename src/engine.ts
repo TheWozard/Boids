@@ -46,7 +46,7 @@ export class Engine {
         "avoidanceDirection": -1, // [-1, 1] Angle the boid will look in for checking avoidance.
 
         "alignRadius": 75, // Distance a boid will look to align with other boids
-        "alignFactor": 0.4, // How hard the boid will attempt to align with other boids (This is scaled up linearly across the radius)
+        "alignFactor": 0.7, // How hard the boid will attempt to align with other boids (This is scaled up linearly across the radius)
         "alignmentDirection": 0, // [-1, 1] Angle the boid will check alignments in.
 
         "centeringRadius": 100, // Distance the boid will look in and find the center of to move towards
