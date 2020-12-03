@@ -2,7 +2,6 @@ const path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    mode: 'development',
     entry: './src/index.ts',
     output: {
         filename: 'bundle.js',
@@ -10,6 +9,7 @@ module.exports = {
     },
     plugins: [new HtmlWebpackPlugin({
         template: "./src/index.template.html",
+        favicon: "./src/assets/boid.png",
         title: "Boids"
     })],
     module: {
@@ -22,7 +22,7 @@ module.exports = {
         ],
     },
     resolve: {
-        extensions: ['.ts','.js'],
+        extensions: ['.ts', '.js'],
     },
     devtool: 'inline-source-map',
     devServer: {
