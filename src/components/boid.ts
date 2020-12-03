@@ -81,13 +81,13 @@ export class Boid extends PIXI.Container implements Updatable, Wrapable, Collide
     public checkNeighbors(boids: Boid[], colliders: Collider[], delta: number) {
         const avoidanceVector = new Victor(0, 0)
         // Protection from having the avoidance smaller then the objects scale
-        const trueAvoidanceDistance: number = Math.max(this.boidScale, this.settings.avoidanceRadius)
+        // const trueAvoidanceDistance: number = Math.max(this.boidScale, this.settings.avoidanceRadius)
         for (let index = 0; index < colliders.length; index++) {
             const target: Collider = colliders[index]
             const distance: Victor = new Victor(target.x - this.x, target.y - this.y)
             const magnitude: number = distance.magnitude()
             const distanceTo: number =  target.getDistanceToNearestEdge(distance)
-            if (magnitude - distanceTo < trueAvoidanceDistance + distanceTo){
+            if (magnitude - distanceTo < this.boidScale){
                 avoidanceVector.add(distance.divideScalar(magnitude/(this.settings.avoidanceRadius + distanceTo)))
             }
         }

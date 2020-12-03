@@ -29,7 +29,7 @@ export class Engine {
         new SolidShader(0xDDE8E9),
     ]
     private boidCount = 250
-    private obstacleCount = 5
+    private obstacleCount = 20
     private static defaultSettings: SimulationSettings = {
         "debug": false, // Should the Boids render their debug info
         "applyScale": false, // Unimplemented (Scale of boid increases the radiuses proportionally)
