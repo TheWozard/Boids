@@ -1,4 +1,6 @@
 # Boids
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f5cef77e-ab9b-4e49-89e4-e5cdad3e6a0b/deploy-status)](https://app.netlify.com/sites/thewozard-boids/deploys)
+
 A simple flock simulation
 
 ## Running Locally
