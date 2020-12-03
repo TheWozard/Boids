@@ -7,6 +7,7 @@ import { Slider } from "./components/slider";
 import { Menu } from "./components/menu";
 import { Divider } from "./components/divider";
 import { RainbowShader } from "./shader/rainbowShader";
+import { Obstacle } from "./components/obstacle";
 
 export interface EngineProps {
     maxX: number, maxY: number,
@@ -16,6 +17,7 @@ export interface EngineProps {
 export class Engine {
 
     private updateList: Updatable[] = [];
+    private obstacles: Obstacle[] = [];
     private boids: Boid[] = [];
 
     private boidColors = [
@@ -26,7 +28,8 @@ export class Engine {
         new SolidShader(0xB3E2EB),
         new SolidShader(0xDDE8E9),
     ]
-    private boidCount = 80
+    private boidCount = 250
+    private obstacleCount = 5
     private static defaultSettings: SimulationSettings = {
         "debug": false, // Should the Boids render their debug info
         "applyScale": false, // Unimplemented (Scale of boid increases the radiuses proportionally)
@@ -38,15 +41,13 @@ export class Engine {
         // 0: things in front. 
         // 0.5: things in a 90 arc in front 
 
-        "avoidanceRadius": 50, // Distance a boid will look to not hit something
+        "avoidanceRadius": 25, // Distance a boid will look to not hit something
         "avoidanceFactor": 0.4, // How hard the boid will attempt to avoid hitting something (This is scaled up linearly across the radius)
         "avoidanceDirection": -1, // [-1, 1] Angle the boid will look in for checking avoidance.
 
         "alignRadius": 75, // Distance a boid will look to align with other boids
         "alignFactor": 0.4, // How hard the boid will attempt to align with other boids (This is scaled up linearly across the radius)
-        // TODO: is this interesting?
-        "alignmentPrecision": 0.7, // [-1, 1] Minimum angle the boid will check alignments in.
-        "alignmentDirection": 0, // [-1, 1] Maximum angle the boid will check alignments in.
+        "alignmentDirection": 0, // [-1, 1] Angle the boid will check alignments in.
 
         "centeringRadius": 100, // Distance the boid will look in and find the center of to move towards
         "centeringFactor": 0.04, // How hard the boid will move towards the center. (This is applied at a constant)
@@ -57,11 +58,23 @@ export class Engine {
     private running: boolean = true;
 
     private props: EngineProps;
+    private tickText: PIXI.Text;
+
+    private sumUpdateTime: number = 0;
+    private updateCount: number = 0;
 
     constructor(props: EngineProps, app: PIXI.Application) {
 
         this.props = props
         this.settings = Object.assign({}, Engine.defaultSettings)
+
+        for (let index = 0; index < this.obstacleCount; index++) {
+            const obstacle = new Obstacle(Math.floor((Math.random() * 20) + 50))
+            obstacle.x = Math.random() * props.maxX
+            obstacle.y = Math.random() * props.maxY
+            app.stage.addChild(obstacle)
+            this.obstacles.push(obstacle)
+        }
 
         for (let index = 0; index < this.boidCount; index++) {
             var boid = new Boid({
@@ -103,9 +116,6 @@ export class Engine {
             new Slider({
                 "title": "Align Direction", "height": 10, "width": width, "min": -1, "max": 1, "padding": padding, "color": color,
             }, (value: number) => { this.settings.alignmentDirection = value; this.reDraw(); }, this.settings.alignmentDirection),
-            new Slider({
-                "title": "Align Precision", "height": 10, "width": width, "min": -1, "max": 1, "padding": padding, "color": color,
-            }, (value: number) => { this.settings.alignmentPrecision = value; this.reDraw(); }, this.settings.alignmentPrecision),
             new Divider({
                 "height": divider, "width": width + 2 * padding, "color": color,
             }),
@@ -183,6 +193,11 @@ export class Engine {
         toggleMenus.y = props.maxY - 5 - toggleMenus.height
         app.stage.addChild(toggleMenus)
 
+        this.tickText= new PIXI.Text("" + 0, { fontFamily: 'Arial', fontSize: 20, fill: color, align: 'start' })
+        this.tickText.x = toggleMenus.x + toggleMenus.width + 5
+        this.tickText.y = props.maxY - 5 - this.tickText.height
+        app.stage.addChild(this.tickText)
+
         app.ticker.add(this.safeUpdate.bind(this), null, 0)
     }
 
@@ -193,6 +208,13 @@ export class Engine {
     }
 
     public forceUpdate(delta: number) {
+        this.sumUpdateTime += delta
+        this.updateCount ++
+        if (this.updateCount >= 20) {
+            this.tickText.text = "" + Math.floor((this.sumUpdateTime / this.updateCount)* 100) / 100
+            this.sumUpdateTime = 0
+            this.updateCount = 0
+        }
         this.updateList.forEach((itm: Updatable) => itm.update(delta))
 
         this.boids.forEach((obj) => {
@@ -212,7 +234,7 @@ export class Engine {
         })
 
         this.boids.forEach((current: Boid) => {
-            current.checkNeighbors(this.boids, delta);
+            current.checkNeighbors(this.boids, this.obstacles, delta);
         })
     }
 

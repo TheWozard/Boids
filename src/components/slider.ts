@@ -10,7 +10,6 @@ export class Slider extends PIXI.Container {
 
     private params: SliderParams;
     private barStartX: number;
-    private barEndX: number;
 
     private dot: PIXI.Graphics;
 
@@ -23,7 +22,6 @@ export class Slider extends PIXI.Container {
         this.addChild(title)
 
         this.barStartX = params.padding
-        this.barEndX = params.padding + params.width
 
         const barStartY = params.height
         const fullPadding = (2 * params.padding)
@@ -75,7 +73,7 @@ export class Slider extends PIXI.Container {
 
         this.on("pointertap", (event: any) => {
             const point = this.getGlobalPosition()
-            const proportion = Math.min(Math.max(event.data.global.x - point.x - this.barStartX, 0), this.barEndX) / (params.width)
+            const proportion = Math.min(Math.max(event.data.global.x - point.x - this.barStartX, 0), this.params.width) / (params.width)
             const value = params.min + ((params.max - params.min) * proportion)
 
             // Updates

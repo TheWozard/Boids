@@ -1,3 +1,5 @@
+import Victor from "victor";
+
 export interface Updatable {
     update(delta: number): void
 }
@@ -6,6 +8,12 @@ export interface Wrapable {
     x: number
     y: number
     readonly wrapPadding: number;
+}
+
+export interface Collider {
+    x: number,
+    y: number,
+    getDistanceToNearestEdge(distance: Victor): number
 }
 
 export interface Shader extends Updatable {
@@ -22,7 +30,6 @@ export interface SimulationSettings {
     
     alignRadius: number;
     alignFactor: number;
-    alignmentPrecision: number;
     alignmentDirection: number;
 
     centeringRadius: number;
