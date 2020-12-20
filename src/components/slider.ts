@@ -4,6 +4,7 @@ export interface SliderParams {
     min: number, max: number,
     width: number, height: number, padding: number,
     color: number, title: string,
+    round?: number,
 }
 
 export class Slider extends PIXI.Container {
@@ -74,7 +75,21 @@ export class Slider extends PIXI.Container {
         this.on("pointertap", (event: any) => {
             const point = this.getGlobalPosition()
             const proportion = Math.min(Math.max(event.data.global.x - point.x - this.barStartX, 0), this.params.width) / (params.width)
-            const value = params.min + ((params.max - params.min) * proportion)
+            var value = params.min + ((params.max - params.min) * proportion)
+
+            if (params.round != null) {
+                value = value * (1/params.round)
+                value = Math.round(value)
+                value = value / (1/params.round)
+            }
+
+            if (value > params.max) {
+                value = params.max
+            }
+
+            if (value < params.min) {
+                value = params.min
+            }
 
             // Updates
             this.dot.x = this.barStartX + this.getOffset(value)

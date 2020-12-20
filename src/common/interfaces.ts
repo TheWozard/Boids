@@ -1,7 +1,8 @@
 import Victor from "victor";
+import { Boid } from "../components/boid";
 
 export interface Updatable {
-    update(delta: number): void
+    update(delta: number, context: Context): void
 }
 
 export interface Wrapable {
@@ -35,4 +36,9 @@ export interface SimulationSettings {
     centeringRadius: number;
     centeringFactor: number;
     centeringDirection: number;
+}
+
+export interface Context {
+    entities: Boid[]; 
+    colliders: Collider[]
 }

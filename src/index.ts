@@ -31,8 +31,13 @@ const props: EngineProps = {
 
 new Engine(props, app)
 
+app.stage.interactive = true;
+app.stage.hitArea = new PIXI.Rectangle(0, 0, maxX, maxY);
+
 window.onresize = (event: any) => {
     props.maxX = event.target.innerWidth
     props.maxY = event.target.innerHeight
     app.renderer.resize(event.target.innerWidth, event.target.innerHeight)
+
+    app.stage.hitArea =  new PIXI.Rectangle(0, 0, event.target.innerWidth, event.target.innerHeight);
 }
