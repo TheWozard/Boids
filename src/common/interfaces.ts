@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import Victor from "victor";
 import { Boid } from "../components/boid";
 
@@ -36,9 +37,12 @@ export interface SimulationSettings {
     centeringRadius: number;
     centeringFactor: number;
     centeringDirection: number;
+
+    baitFactor: number;
 }
 
 export interface Context {
     entities: Boid[]; 
     colliders: Collider[]
+    bait: PIXI.Point | null
 }

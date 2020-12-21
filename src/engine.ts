@@ -55,6 +55,8 @@ export class Engine {
 
         // "speedMultiplier": 1,
 
+        "baitFactor": 0.5,
+
     }
     private settings: SimulationSettings;
     private running: boolean = true;
@@ -244,6 +246,7 @@ export class Engine {
         const context: Context = {
             "colliders": this.obstacles,
             "entities": this.boids,
+            "bait": this.baitLocation,
         }
 
         this.boids.forEach((obj) => {

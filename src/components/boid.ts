@@ -144,6 +144,10 @@ export class Boid extends PIXI.Container implements Updatable, Wrapable, Collide
         } else {
             this.boidCenteringVector = centeringVector
         }
+        if (context.bait) {
+            const lureVector = new Victor(context.bait.x, context.bait.y).subtract(new Victor(this.x, this.y)).normalize()
+            output.add(lureVector.multiplyScalar(this.settings.baitFactor))
+        }
         return output.normalize()
     }
 
